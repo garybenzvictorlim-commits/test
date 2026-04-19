@@ -1,0 +1,23 @@
+# ── Build output ─────────────────────────────
+bin/
+obj/
+
+# ── Database file (don't commit this to GitHub)
+# Each person running the project gets their own fresh database
+queue.db
+queue.db-shm
+queue.db-wal
+
+# ── VS Code settings (optional: remove if you want to share settings)
+.vscode/
+
+# ── OS junk files ─────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── .NET user secrets ─────────────────────────
+*.user
+appsettings.Development.json
+
+# ── NuGet packages (dotnet restore will re-download these)
+*.nupkg
