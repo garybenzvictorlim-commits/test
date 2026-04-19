@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login – School Queue System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════════
+       LOGIN / REGISTER PAGE STYLES
+       ══════════════════════════════════════ */
+    :root {
+      --bg:       #0a0f1e;
+      --surface:  #111827;
+      --card:     #1a2235;
+      --border:   #2a3a55;
+      --accent:   #58a6ff;
+      --green:    #3fb950;
+      --red:      #f85149;
+      --text:     #c9d1d9;
+      --muted:    #6e7681;
+      --text-inv: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      /* Subtle grid background */
+      background-image:
+        linear-gradient(rgba(88,166,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(88,166,255,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .page-wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* ── School branding at top ── */
+    .branding {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .brand-icon { font-size: 3rem; margin-bottom: 8px; }
+
+    .brand-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 3px;
+      color: var(--text-inv);
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── Card ── */
+    .auth-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    /* ── Tab switcher (Login / Register) ── */
+    .tab-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      padding: 16px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      background: rgba(88,166,255,0.07);
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .tab-btn:hover:not(.active) { color: var(--text); }
+
+    /* ── Form panels ── */
+    .form-panel {
+      padding: 28px 28px 24px;
+      display: none;
+    }
+
+    .form-panel.active { display: block; }
+
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-inv);
+      margin-bottom: 4px;
+    }
+
+    .panel-sub {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    /* ── Form fields ── */
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-inv);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88,166,255,0.1);
+    }
+
+    .field input::placeholder { color: var(--muted); }
+
+    /* Password visibility toggle */
+    .pass-wrap { position: relative; }
+    .pass-wrap input { padding-right: 44px; }
+    .eye-btn {
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 4px;
+    }
+    .eye-btn:hover { color: var(--text); }
+
+    /* ── Submit button ── */
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      margin-top: 6px;
+    }
+
+    .submit-btn:hover { opacity: 0.88; }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Alert message ── */
+    .alert {
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+      display: none;
+      line-height: 1.4;
+    }
+
+    .alert.error   { background: rgba(248,81,73,0.12);  border: 1px solid var(--red);   color: var(--red);   display: block; }
+    .alert.success { background: rgba(63,185,80,0.12);  border: 1px solid var(--green); color: var(--green); display: block; }
+
+    /* ── Footer link ── */
+    .card-footer {
+      padding: 14px 28px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      font-size: 0.83rem;
+      color: var(--muted);
+    }
+
+    .card-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* ── Password strength bar (register only) ── */
+    .strength-bar-wrap {
+      margin-top: 6px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .strength-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 4px;
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .strength-label {
+      font-size: 0.72rem;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    /* ── Student board link at bottom ── */
+    .student-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .student-link a { color: var(--muted); }
+    .student-link a:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- Branding -->
+  <div class="branding">
+    <div class="brand-icon">🎓</div>
+    <div class="brand-title">School Queue System</div>
+    <div class="brand-sub">Admin Portal</div>
+  </div>
+
+  <!-- Auth Card -->
+  <div class="auth-card">
+
+    <!-- Tab switcher -->
+    <div class="tab-row">
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">🔑 Login</button>
+      <button class="tab-btn" id="tab-register" onclick="switchTab('register')">📝 Register</button>
+    </div>
+
+    <!-- ── LOGIN PANEL ─────────────────────────────── -->
+    <div class="form-panel active" id="panel-login">
+      <div class="panel-title">Welcome back</div>
+      <div class="panel-sub">Sign in to access the admin dashboard.</div>
+
+      <div class="alert" id="login-alert"></div>
+
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="login-username" placeholder="Enter your username" autocomplete="username" />
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password" />
+          <button class="eye-btn" onclick="togglePass('login-password', this)" tabindex="-1">👁️</button>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="login-btn" onclick="doLogin()">Sign In →</button>
+    </div>
+
+    <!-- ── REGISTER PANEL ──────────────────────────── -->
+    <div class="form-panel" id="panel-register">
+      <div class="panel-title">Create an account</div>
+      <div class="panel-sub">Register a new admin account to manage the queues.</div>
+
+      <div class="alert" id="register-alert"></div>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="reg-fullname" placeholder="e.g. Maria Santos" autocomplete="name" />
+      </div>
+
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="reg-username" placeholder="Choose a username" autocomplete="username" />
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="reg-password" placeholder="Min. 6 characters"
+            autocomplete="new-password" oninput="checkStrength(this.value)" />
+          <button class="eye-btn" onclick="togglePass('reg-password', this)" tabindex="-1">👁️</button>
+        </div>
+        <div class="strength-bar-wrap">
+          <div class="strength-bar" id="strength-bar"></div>
+        </div>
+        <div class="strength-label" id="strength-label"></div>
+      </div>
+
+      <div class="field">
+        <label>Confirm Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="reg-confirm" placeholder="Re-enter password" autocomplete="new-password" />
+          <button class="eye-btn" onclick="togglePass('reg-confirm', this)" tabindex="-1">👁️</button>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="register-btn" onclick="doRegister()">Create Account →</button>
+    </div>
+
+    <!-- Footer link -->
+    <div class="card-footer">
+      <span id="footer-text">Don't have an account? <a href="#" onclick="switchTab('register')">Register here</a></span>
+    </div>
+  </div>
+
+  <!-- Back to student board -->
+  <div class="student-link">
+    <a href="/student/index.html">← Back to Student Display Board</a>
+  </div>
+
+</div>
+
+<script>
+  // ════════════════════════════════════════════════
+  //  login.html — Client-side JS for Login/Register
+  // ════════════════════════════════════════════════
+
+  const API = '/api/auth';
+
+  // ── Tab switching ─────────────────────────────
+  function switchTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('panel-login').classList.toggle('active', isLogin);
+    document.getElementById('panel-register').classList.toggle('active', !isLogin);
+    document.getElementById('tab-login').classList.toggle('active', isLogin);
+    document.getElementById('tab-register').classList.toggle('active', !isLogin);
+    document.getElementById('footer-text').innerHTML = isLogin
+      ? `Don't have an account? <a href="#" onclick="switchTab('register')">Register here</a>`
+      : `Already have an account? <a href="#" onclick="switchTab('login')">Sign in</a>`;
+    clearAlerts();
+  }
+
+  // ── Toggle password visibility ────────────────
+  function togglePass(inputId, btn) {
+    const input = document.getElementById(inputId);
+    input.type = input.type === 'password' ? 'text' : 'password';
+    btn.textContent = input.type === 'password' ? '👁️' : '🙈';
+  }
+
+  // ── Show alert message ────────────────────────
+  function showAlert(id, msg, type) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.className = `alert ${type}`;
+  }
+
+  function clearAlerts() {
+    ['login-alert', 'register-alert'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '';
+      el.className = 'alert';
+    });
+  }
+
+  // ── Password strength checker ─────────────────
+  function checkStrength(pw) {
+    const bar   = document.getElementById('strength-bar');
+    const label = document.getElementById('strength-label');
+    let score = 0;
+    if (pw.length >= 6)  score++;
+    if (pw.length >= 10) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+    const levels = [
+      { pct: '0%',   color: '',              text: '' },
+      { pct: '25%',  color: 'var(--red)',    text: 'Weak' },
+      { pct: '50%',  color: '#f59e0b',       text: 'Fair' },
+      { pct: '75%',  color: 'var(--accent)', text: 'Good' },
+      { pct: '90%',  color: 'var(--green)',  text: 'Strong' },
+      { pct: '100%', color: 'var(--green)',  text: 'Very Strong' },
+    ];
+    const lvl = levels[score] || levels[0];
+    bar.style.width = lvl.pct;
+    bar.style.background = lvl.color;
+    label.textContent = lvl.text;
+  }
+
+  // ── Handle Enter key ──────────────────────────
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    const loginActive = document.getElementById('panel-login').classList.contains('active');
+    if (loginActive) doLogin();
+    else doRegister();
+  });
+
+  // ── Login ─────────────────────────────────────
+  async function doLogin() {
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+    const btn = document.getElementById('login-btn');
+
+    if (!username || !password) {
+      showAlert('login-alert', '⚠️ Please fill in both fields.', 'error'); return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Signing in...';
+
+    try {
+      const res  = await fetch(`${API}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        showAlert('login-alert', `✅ ${data.message} Redirecting...`, 'success');
+        setTimeout(() => { window.location.href = '/admin/index.html'; }, 800);
+      } else {
+        showAlert('login-alert', '❌ ' + data.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Sign In →';
+      }
+    } catch {
+      showAlert('login-alert', '❌ Cannot reach the server. Is it running?', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Sign In →';
+    }
+  }
+
+  // ── Register ──────────────────────────────────
+  async function doRegister() {
+    const fullName = document.getElementById('reg-fullname').value.trim();
+    const username = document.getElementById('reg-username').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const confirm  = document.getElementById('reg-confirm').value;
+    const btn = document.getElementById('register-btn');
+
+    if (!fullName || !username || !password || !confirm) {
+      showAlert('register-alert', '⚠️ All fields are required.', 'error'); return;
+    }
+    if (password.length < 6) {
+      showAlert('register-alert', '⚠️ Password must be at least 6 characters.', 'error'); return;
+    }
+    if (password !== confirm) {
+      showAlert('register-alert', '⚠️ Passwords do not match.', 'error'); return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Creating account...';
+
+    try {
+      const res  = await fetch(`${API}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName, username, password }),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        showAlert('register-alert', `✅ ${data.message} Redirecting...`, 'success');
+        setTimeout(() => { window.location.href = '/admin/index.html'; }, 900);
+      } else {
+        showAlert('register-alert', '❌ ' + data.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Create Account →';
+      }
+    } catch {
+      showAlert('register-alert', '❌ Cannot reach the server. Is it running?', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Create Account →';
+    }
+  }
+</script>
+</body>
+</html>

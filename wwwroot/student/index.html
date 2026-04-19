@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Queue Display Board – School</title>
+  <link rel="stylesheet" href="/css/student.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ── HEADER ─────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="school-logo">🎓</div>
+      <div class="header-text">
+        <h1 class="school-name">School Queue System</h1>
+        <p class="header-sub">Live Queue Display Board</p>
+      </div>
+      <div class="live-indicator">
+        <span class="pulse-dot"></span>
+        <span>LIVE</span>
+      </div>
+    </div>
+    <div class="ticker-bar">
+      <span id="ticker-text">📢 Please take a number at the counter. Keep your ticket and wait for your number to be called. Thank you for your patience!</span>
+    </div>
+  </header>
+
+  <!-- ── MAIN BOARD ──────────────────────────────────── -->
+  <main class="board">
+
+    <!-- Top info strip -->
+    <div class="info-strip">
+      <div class="info-item">
+        <span class="info-icon">📅</span>
+        <span id="current-date">Loading...</span>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">🕐</span>
+        <span id="current-time">--:--:--</span>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">🔄</span>
+        <span>Auto-refreshes every 5 seconds</span>
+      </div>
+    </div>
+
+    <!-- Queue cards grid -->
+    <div class="queue-grid" id="queue-grid">
+      <!-- Cards are injected here by JavaScript -->
+      <div class="loading-msg">Loading queue data...</div>
+    </div>
+
+    <!-- Get a number section -->
+    <section class="get-number-section">
+      <h2 class="section-title">📋 Get a Queue Number</h2>
+      <p class="section-sub">Select a service below to receive your queue number.</p>
+      <div class="issue-grid" id="issue-grid">
+        <!-- Buttons injected by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── TICKET MODAL ────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="ticket-modal">
+      <div class="ticket-top">
+        <span class="ticket-emoji">🎟️</span>
+        <h2>Your Queue Ticket</h2>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-counter-name" id="modal-counter-name">Service Name</div>
+        <div class="ticket-number-label">Your Number</div>
+        <div class="ticket-big-number" id="modal-number">--</div>
+        <p class="ticket-note">Please wait for your number to appear on the board above.</p>
+      </div>
+      <button class="close-btn" onclick="closeModal()">Got it! ✓</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>School Queue Management System &nbsp;|&nbsp; For admin access go to <strong>/admin/index.html</strong></p>
+  </footer>
+
+  <script src="/js/student.js"></script>
+</body>
+</html>
