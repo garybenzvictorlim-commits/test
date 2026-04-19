@@ -85,5 +85,5 @@ Console.WriteLine("  Admin Login     : http://localhost:5000/admin/login.html");
 Console.WriteLine("  Admin Panel     : http://localhost:5000/admin/index.html");
 Console.WriteLine("  API Base URL    : http://localhost:5000/api/queue");
 Console.WriteLine("=================================================");
-
-app.Run("http://localhost:5000");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");
