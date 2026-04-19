@@ -85,5 +85,16 @@ Console.WriteLine($" Admin Login    : /admin/login.html");
 Console.WriteLine($" Admin Panel    : /admin/index.html");
 Console.WriteLine($" API Base URL   : /api/queue");
 Console.WriteLine("=================================================");
+var builder = WebApplication.CreateBuilder(args);
+
+var app = builder.Build();
+
+// ✅ ROOT ENDPOINT (VERY IMPORTANT)
+app.MapGet("/", () => "API IS RUNNING");
+
+// your existing routes
+app.MapControllers();
+
+// ✅ PORT FIX
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Run($"http://0.0.0.0:{port}");
